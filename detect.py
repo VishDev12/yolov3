@@ -88,10 +88,6 @@ def detect(save_txt=False, save_img=False):
         df["yolo_Type_gt_att_conf"] = np.nan
         df["paths"] = np.nan
         df = df.set_index("image_url")
-        
-        # Add new columns paths by parsing the image names and ext from image_url
-        # for url in url_list:
-        #    df.loc[url, "paths"] = "".join(os.path.splitext(os.path.basename(urlparse.urlsplit(url).path)))
 
     # Run inference
     t0 = time.time()
@@ -135,7 +131,6 @@ def detect(save_txt=False, save_img=False):
                 # Write results
                 for *xyxy, conf, _, cls in det:
                     if proc_csv: # Write to CSV
-                        print(df.index)
                         path_var = "https://s3-ap-southeast-1.amazonaws.com/msd-cvteam-apse/images/" + path_var
                         df.loc[path_var, "yolo_Category_gt_bbox"] = str(list(map(int, xyxy)))
                         df.loc[path_var, "yolo_Type_gt_att"] = int(cls)
@@ -195,7 +190,6 @@ if __name__ == '__main__':
     parser.add_argument('--device', default='', help='device id (i.e. 0 or 0,1) or cpu')
     parser.add_argument('--view-img', action='store_true', help='display results')
     parser.add_argument('--csv', help = 'input csv with url field given in --url')
-    parser.add_argument('--url', help = 'field in the csv that contains the image urls')
     opt = parser.parse_args()
     print(opt)
 
