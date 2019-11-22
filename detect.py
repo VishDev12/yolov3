@@ -138,7 +138,7 @@ def detect(save_txt=False, save_img=False):
                 # Write results
                 for *xyxy, conf, _, cls in det:
                     if proc_csv: # Write to CSV
-                        df.loc[path_var, "yolo_Category_gt_bbox"] = list(map(int, xyxy))
+                        df.loc[path_var, "yolo_Category_gt_bbox"] = str(list(map(int, xyxy)))
                         df.loc[path_var, "yolo_Type_gt_att"] = int(cls)
                         df.loc[path_var, "yolo_Type_gt_att_conf"] = float(conf)
                         df.to_csv("output{}".format(time.time()))
