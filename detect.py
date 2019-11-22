@@ -87,7 +87,7 @@ def detect(save_txt=False, save_img=False):
         df["yolo_Type_gt_att"] = np.nan
         df["yolo_Type_gt_att_conf"] = np.nan
         df["paths"] = np.nan
-        df.set_index("image_url")
+        df = df.set_index("image_url")
         
         # Add new columns paths by parsing the image names and ext from image_url
         # for url in url_list:
