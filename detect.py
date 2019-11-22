@@ -1,5 +1,9 @@
 import argparse
 from sys import platform
+import pandas as pd
+import numpy as np
+import os
+import urllib.parse as urlparse
 
 from models import *  # set ONNX_EXPORT in models.py
 from utils.datasets import *
@@ -71,11 +75,31 @@ def detect(save_txt=False, save_img=False):
     classes = load_classes(parse_data_cfg(opt.data)['names'])
     colors = [[random.randint(0, 255) for _ in range(3)] for _ in range(len(classes))]
 
+    # Load CSV and create new columns
+    if opt.csv:
+        proc_csv = True
+
+    if proc_csv:
+        df = pd.read_csv(opt.csv)
+        df["yolo_Category_gt_bbox"] = np.nan
+        df["yolo_Type_gt_att"] = np.nan
+        df["yolo_Type_gt_att_conf"] = np.nan
+        df["paths"] = np.nan
+        url_list = df["image_url"]
+        df.set_index["image_url"]
+        
+        # Add new columns paths by parsing the image names and ext from image_url
+        for url in url_list:
+            df.loc[url, "paths"] = "".join(os.path.splitext(os.path.basename(urlparse.urlsplit(url).path)))
+
+        # Set the index of dataframe to paths
+        df = df.set_index("paths")
+
     # Run inference
     t0 = time.time()
     for path, img, im0s, vid_cap in dataset:
         t = time.time()
-
+        path_var = path.split("/")[-1].strip()
         # Get detections
         img = torch.from_numpy(img).to(device)
         if img.ndimension() == 3:
@@ -112,6 +136,12 @@ def detect(save_txt=False, save_img=False):
 
                 # Write results
                 for *xyxy, conf, _, cls in det:
+                    if proc_csv: # Write to CSV
+                        df.loc[path_var, "yolo_Category_gt_bbox"] = list(map(int, xyxy))
+                        df.loc[path_var, "yolo_Type_gt_att"] = int(cls)
+                        df.loc[path_var, "yolo_Type_gt_att_conf"] = float(conf)
+                        df.to_csv("output{}".format(time.time()))
+
                     if save_txt:  # Write to file
                         with open(save_path + '.txt', 'a') as file:
                             file.write(('%g ' * 6 + '\n') % (*xyxy, cls, conf))
@@ -164,8 +194,10 @@ if __name__ == '__main__':
     parser.add_argument('--half', action='store_true', help='half precision FP16 inference')
     parser.add_argument('--device', default='', help='device id (i.e. 0 or 0,1) or cpu')
     parser.add_argument('--view-img', action='store_true', help='display results')
+    parser.add_argument('--csv', help = 'input csv with url field given in --url')
+    parser.add_argument('--url', help = 'field in the csv that contains the image urls')
     opt = parser.parse_args()
     print(opt)
 
     with torch.no_grad():
-        detect()
+        detect(save_txt=True, )
