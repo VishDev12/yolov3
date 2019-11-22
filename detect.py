@@ -76,6 +76,7 @@ def detect(save_txt=False, save_img=False):
     colors = [[random.randint(0, 255) for _ in range(3)] for _ in range(len(classes))]
 
     # Load CSV and create new columns
+    proc_csv = False
     if opt.csv:
         proc_csv = True
 
