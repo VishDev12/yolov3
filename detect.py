@@ -166,7 +166,7 @@ def detect(save_txt=False, save_img=False):
                         vid_writer = cv2.VideoWriter(save_path, cv2.VideoWriter_fourcc(*opt.fourcc), fps, (w, h))
                     vid_writer.write(im0)
 
-    df.to_csv("output{}".format(time.time())
+    df.to_csv("output{}".format(time.time()))
 
     if save_txt or save_img:
         print('Results saved to %s' % os.getcwd() + os.sep + out)
