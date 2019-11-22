@@ -82,6 +82,7 @@ def detect(save_txt=False, save_img=False):
 
     if proc_csv:
         df = pd.read_csv(opt.csv)
+        df.drop_duplicates(subset = "image_url", inplace = True, keep = "first")
         df["yolo_Category_gt_bbox"] = np.nan
         df["yolo_Type_gt_att"] = np.nan
         df["yolo_Type_gt_att_conf"] = np.nan
