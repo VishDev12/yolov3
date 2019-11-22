@@ -135,7 +135,6 @@ def detect(save_txt=False, save_img=False):
                         df.loc[path_var, "yolo_Category_gt_bbox"] = str(list(map(int, xyxy)))
                         df.loc[path_var, "yolo_Type_gt_att"] = int(cls)
                         df.loc[path_var, "yolo_Type_gt_att_conf"] = float(conf)
-                        df.to_csv("output{}.csv".format(time.time()))
 
                     if save_txt:  # Write to file
                         with open(save_path + '.txt', 'a') as file:
@@ -166,6 +165,8 @@ def detect(save_txt=False, save_img=False):
                         h = int(vid_cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
                         vid_writer = cv2.VideoWriter(save_path, cv2.VideoWriter_fourcc(*opt.fourcc), fps, (w, h))
                     vid_writer.write(im0)
+
+    df.to_csv("output{}".format(time.time())
 
     if save_txt or save_img:
         print('Results saved to %s' % os.getcwd() + os.sep + out)
