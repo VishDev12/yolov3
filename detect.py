@@ -87,15 +87,15 @@ def detect(save_txt=False, save_img=False):
         df["yolo_Type_gt_att"] = np.nan
         df["yolo_Type_gt_att_conf"] = np.nan
         df["paths"] = np.nan
-        url_list = df["image_url"]
+        # url_list = df["image_url"]
         df.set_index("image_url")
         
         # Add new columns paths by parsing the image names and ext from image_url
-        for url in url_list:
-            df.loc[url, "paths"] = "".join(os.path.splitext(os.path.basename(urlparse.urlsplit(url).path)))
+        # for url in url_list:
+        #    df.loc[url, "paths"] = "".join(os.path.splitext(os.path.basename(urlparse.urlsplit(url).path)))
 
         # Set the index of dataframe to paths
-        df = df.set_index("paths")
+        # df = df.set_index("paths")
 
     # Run inference
     t0 = time.time()
@@ -139,10 +139,11 @@ def detect(save_txt=False, save_img=False):
                 # Write results
                 for *xyxy, conf, _, cls in det:
                     if proc_csv: # Write to CSV
+                        path_var = "https://s3-ap-southeast-1.amazonaws.com/msd-cvteam-apse/images/" + path_var
                         df.loc[path_var, "yolo_Category_gt_bbox"] = str(list(map(int, xyxy)))
                         df.loc[path_var, "yolo_Type_gt_att"] = int(cls)
                         df.loc[path_var, "yolo_Type_gt_att_conf"] = float(conf)
-                        df.to_csv("output{}".format(time.time()))
+                        df.to_csv("output{}.csv".format(time.time()))
 
                     if save_txt:  # Write to file
                         with open(save_path + '.txt', 'a') as file:
