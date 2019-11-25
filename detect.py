@@ -127,13 +127,13 @@ def detect(save_txt=False, save_img=False):
                 for c in det[:, -1].unique():
                     n = (det[:, -1] == c).sum()  # detections per class
                     s += '%g %ss, ' % (n, classes[int(c)])  # add to string
-
+                
                 # Write results
                 for *xyxy, conf, _, cls in det:
-                    if proc_csv: # Write to CSV
+                    if proc_csv: # Write to Dataframe
                         path_var = "https://s3-ap-southeast-1.amazonaws.com/msd-cvteam-apse/images/" + path_var
                         df.loc[path_var, "yolo_Category_gt_bbox"] = str(list(map(int, xyxy)))
-                        df.loc[path_var, "yolo_Type_gt_att"] = int(cls)
+                        df.loc[path_var, "yolo_Type_gt_att"] = str(classes[int(cls)])
                         df.loc[path_var, "yolo_Type_gt_att_conf"] = float(conf)
 
                     if save_txt:  # Write to file
@@ -166,7 +166,8 @@ def detect(save_txt=False, save_img=False):
                         vid_writer = cv2.VideoWriter(save_path, cv2.VideoWriter_fourcc(*opt.fourcc), fps, (w, h))
                     vid_writer.write(im0)
 
-    df.to_csv("output{}".format(time.time()))
+    # Write to CSV
+    df.to_csv("output{}.csv".format(time.time()))
 
     if save_txt or save_img:
         print('Results saved to %s' % os.getcwd() + os.sep + out)
