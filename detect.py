@@ -136,13 +136,14 @@ def detect(save_txt=False, save_img=False):
                         df.loc[path_var, "yolo_Type_gt_att"] = str(classes[int(cls)])
                         df.loc[path_var, "yolo_Type_gt_att_conf"] = float(conf)
 
-                    if save_txt:  # Write to file
-                        with open(save_path + '.txt', 'a') as file:
-                            file.write(('%g ' * 6 + '\n') % (*xyxy, cls, conf))
+                    # if save_txt:  # Write to file
+                    #    with open(save_path + '.txt', 'a') as file:
+                    #        file.write(('%g ' * 6 + '\n') % (*xyxy, cls, conf))
 
-                    if save_img or view_img:  # Add bbox to image
-                        label = '%s %.2f' % (classes[int(cls)], conf)
-                        plot_one_box(xyxy, im0, label=label, color=colors[int(cls)])
+                    #if save_img or view_img:  # Add bbox to image
+                    #    label = '%s %.2f' % (classes[int(cls)], conf)
+                    #    plot_one_box(xyxy, im0, label=label, color=colors[int(cls)])
+                    break # break loop once the top confidence entry is saved
 
             print('%sDone. (%.3fs)' % (s, time.time() - t))
 
