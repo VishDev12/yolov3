@@ -325,6 +325,8 @@ class LoadImagesAndLabels(Dataset):  # for training/testing
                 try:
                     with open(file, 'r') as f:
                         l = np.array([x.split() for x in f.read().splitlines()], dtype=np.float32)
+                        if l.shape[0]: # check if any lines available
+                            assert (l[:, 1:] <= 1).all() # check if all coordinates lesser than 1
                 except:
                     nm += 1  # print('missing labels for image %s' % self.img_files[i])  # file missing
                     continue
