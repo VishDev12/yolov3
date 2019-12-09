@@ -102,9 +102,9 @@ class LoadImages:  # for inference
         img = letterbox(img0, new_shape=self.img_size)[0]
 
         # Normalize RGB
-        img = img[:, :, ::-1].transpose(2, 0, 1)  # BGR to RGB
-        img = np.ascontiguousarray(img, dtype=np.float16 if self.half else np.float32)  # uint8 to fp16/fp32
-        img /= 255.0  # 0 - 255 to 0.0 - 1.0
+            img = img[:, :, ::-1].transpose(2, 0, 1)  # BGR to RGB
+            img = np.ascontiguousarray(img, dtype=np.float16 if self.half else np.float32)  # uint8 to fp16/fp32
+            img /= 255.0  # 0 - 255 to 0.0 - 1.0
 
         # cv2.imwrite(path + '.letterbox.jpg', 255 * img.transpose((1, 2, 0))[:, :, ::-1])  # save letterbox image
         return path, img, img0, self.cap
