@@ -315,7 +315,7 @@ class LoadImagesAndLabels(Dataset):  # for training/testing
         # Preload labels (required for weighted CE training)
         self.imgs = [None] * n
         self.labels = [None] * n
-        if 1: # cache_labels or image_weights:  # cache labels for faster training
+        if cache_labels or image_weights:  # cache labels for faster training
             self.labels = [np.zeros((0, 5))] * n
             extract_bounding_boxes = False
             create_datasubset = False
